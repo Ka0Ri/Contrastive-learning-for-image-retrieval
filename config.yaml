@@ -1,0 +1,81 @@
+model_name: 'CGD'
+batch_size: 32
+
+SimCLR:
+  epochs: 200
+  lr: 0.001
+  eval_every_n_epochs: 1
+  fine_tune_from: ""
+  log_every_n_steps: 50
+  weight_decay: 10e-6
+  fp16_precision: False
+  fine_tune: False
+
+Classifier:
+  epochs: 100
+  lr: 0.001
+  eval_every_n_epochs: 1
+  fine_tune_from: ""
+  log_every_n_steps: 50
+  weight_decay: 10e-6
+  fp16_precision: False
+  fine_tune: True
+  TripletLoss: False
+
+Retrieval:
+  fine_tune_from: "CGD-SimCRL"
+  feas_name_file: "features"
+  retrieval_imagaes_name: "class_"
+  fp16_precision: False
+  mode: "cosine"
+  features: "extracted"
+  topk: 5
+
+
+ViT-model:
+  ViTconfig: "ViT-B_16"
+  out_dim: 128
+  pretrained: "checkpoints/ViT-B_16.npz"
+  vis: False
+  n_patches: 25
+ 
+BiT-model:
+  out_dim: 128
+  block_units: ""
+  width_factor: 1
+
+Eff-model:
+  out_dim: 128
+  block_units: "r50"
+  width_factor: 1
+  pretrained: "efficientnet-b7"
+  num_ftrs: 2560
+ 
+CGD-model:
+  backbone_type: 'resnet50'
+  gd_config: 'SG'
+  feature_dim: 128
+
+dataset:
+  s: 1
+  data_folder: '/home/vips/share/Vu/datasets/'
+  input_shape: (224, 224, 3)
+  num_workers: 4
+  valid_size: 0.05
+  name: "cub"
+  n_classes: 200
+  augment: "Gauss"
+  mperclass: 0
+  type: "2"
+
+subcon-loss:
+  temperature: 0.5
+  base: 0.07
+  mode: 'all'
+  method: 'SimCRL'
+
+GCD-loss:
+  margin: 1.0
+  smoothing: 0.1
+  temperature: 1.0
+
